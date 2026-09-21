@@ -1,6 +1,6 @@
-# Guía de Descarga — Rama 4 Filtros (sencillo, didáctico)
+# Guía de Descarga — Main / Rama 4 Filtros (sencillo, didáctico)
 
-> **Rama 4 = Rama 3 + filtros simples vía query params.** Sin paginación ni complejidad. Ramas: `rama-1-iniciacion`, `rama-2-productos`, `rama-3-ordenes`, `rama-4-filtros` (actual).
+> **Main = Rama 4 = Rama 3 + filtros simples vía query params.** Sin paginación ni complejidad. Ramas: `rama-1-iniciacion`, `rama-2-productos`, `rama-3-ordenes`, `rama-4-filtros`/`main`. **Diagrama BD:** [`docs/diagrama-bd.drawio`](./docs/diagrama-bd.drawio) (abrir en https://app.diagrams.net).
 
 **Objetivo didáctico:** aprender a filtrar listados con `@Query()` + DTO + `QueryBuilder` de forma normal y sencilla.
 

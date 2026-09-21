@@ -1,8 +1,8 @@
-# Backend NestJS Seed — Rama 4 Filtros (sencillo)
+# Backend NestJS Seed — Main (Tienda completa + Filtros)
 
-> **Rama actual:** `rama-4-filtros` — añade **filtros simples vía query params + QueryBuilder** sobre la tienda. Ramas: `main`, `rama-1-iniciacion` (users), `rama-2-productos`, `rama-3-ordenes`, `rama-4-filtros` (actual). Guía en [`GUIA_DESCARGA.md`](./GUIA_DESCARGA.md) · Postman en [`postman/backend-nestjs-seed.postman_collection.json`](./postman/backend-nestjs-seed.postman_collection.json).
+> **Rama principal `main` = versión terminada** (igual a `rama-4-filtros`). Ramas didácticas: `rama-1-iniciacion` (users), `rama-2-productos`, `rama-3-ordenes` (relaciones), `rama-4-filtros` (actual). Guía en [`GUIA_DESCARGA.md`](./GUIA_DESCARGA.md) · Postman en [`postman/backend-nestjs-seed.postman_collection.json`](./postman/backend-nestjs-seed.postman_collection.json) · **Diagrama BD editable:** [`docs/diagrama-bd.drawio`](./docs/diagrama-bd.drawio)
 
-Seed NestJS 11 + TypeORM. En esta rama se demuestra **cómo filtrar listados de forma normal y sencilla sin meter complejidad**: `@Query()` + DTO + `QueryBuilder`.
+Seed NestJS 11 + TypeORM. **Main demuestra** tienda completa + **filtros simples sin complejidad**: `@Query()` + DTO + `QueryBuilder` + relaciones + transacción.
 
 ## Qué aprende en esta rama (didáctico, sencillo)
 
@@ -28,15 +28,66 @@ src/
     orders.module.ts / controllers / services / entities / dto
     dto/filter-order.dto.ts     # ← NUEVO: status, userId
 data/app.sqlite
+docs/diagrama-bd.drawio  # ← diagrama ER editable en draw.io (ver sección Diagrama)
 ```
 
-## Guía rápida (Rama 4)
+## Diagrama de Base de Datos (para clase)
+
+**Archivo editable draw.io:** [`docs/diagrama-bd.drawio`](./docs/diagrama-bd.drawio)
+
+Abrir en https://app.diagrams.net → File → Open → selecciona `diagrama-bd.drawio`. También lo puedes abrir directo desde VS Code con extensión Draw.io.
+
+**Preview rápido (Mermaid) — mismo ER:**
+
+```mermaid
+erDiagram
+    users ||--o{ orders : "1 — N"
+    orders ||--o{ order_items : "1 — N"
+    products ||--o{ order_items : "1 — N"
+    users {
+        varchar id PK "5-20 dígitos"
+        varchar name
+        varchar email UK
+        int age
+        varchar phone
+        boolean isActive
+    }
+    products {
+        uuid id PK
+        varchar name
+        text description
+        decimal price
+        int stock
+        boolean isActive
+        timestamp createdAt
+    }
+    orders {
+        uuid id PK
+        varchar userId FK
+        decimal total
+        enum status
+        timestamp createdAt
+    }
+    order_items {
+        uuid id PK
+        uuid orderId FK
+        uuid productId FK
+        int quantity
+        decimal unitPrice
+    }
+```
+
+Tablas: `users`, `products`, `orders`, `order_items` (pivote con `quantity` + `unitPrice` snapshot, `eager` product, `CASCADE` al borrar orders).
+
+## Guía rápida (Main / Rama 4)
 
 ```bash
+git clone https://github.com/cdtello/backend-nestjs-seed.git
+# o rama específica
 git clone -b rama-4-filtros https://github.com/cdtello/backend-nestjs-seed.git
 cd backend-nestjs-seed && npm install && cp .env.example .env && npm run start:dev
 # http://localhost:3000
-# Postman: importar postman/backend-nestjs-seed.postman_collection.json (Users+Products+Orders con filtros)
+# Postman: importar postman/backend-nestjs-seed.postman_collection.json
 ```
 
 ## Módulos previos (resumen)
