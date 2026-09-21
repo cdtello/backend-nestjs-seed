@@ -103,7 +103,29 @@ Entidad `User` (`src/users/entities/user.entity.ts`):
 
 DTOs con validación y lógica de unicidad en `UsersService` (`ConflictException` / `NotFoundException`).
 
-Ejemplo:
+Ejemplos CRUD completos (ver también `GUIA_DESCARGA.md` y `postman/backend-nestjs-seed.postman_collection.json` con las 5 requests):
+
+```bash
+# 1. POST /users - crear
+curl -X POST http://localhost:3000/users -H "Content-Type: application/json" \
+  -d '{"id":"1234567890","name":"Carlos Tello","email":"carlos@ejemplo.com","age":30,"phone":"+573101234567"}'
+# → 201 Created
+
+# 2. GET /users - listar
+curl http://localhost:3000/users
+
+# 3. GET /users/:id - consultar
+curl http://localhost:3000/users/1234567890
+
+# 4. PUT /users/:id - actualizar (campos opcionales)
+curl -X PUT http://localhost:3000/users/1234567890 -H "Content-Type: application/json" \
+  -d '{"name":"Carlos Tello Actualizado","age":31}'
+
+# 5. DELETE /users/:id - desactivar (soft delete)
+curl -X DELETE http://localhost:3000/users/1234567890
+```
+
+Detalle JSON `POST`:
 ```http
 POST /users
 Content-Type: application/json

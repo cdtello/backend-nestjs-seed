@@ -68,7 +68,17 @@ Colección incluida: `postman/backend-nestjs-seed.postman_collection.json`
    - **Actualizar usuario** (`PUT /users/{{userId}}`)
    - **Desactivar usuario** (`DELETE /users/{{userId}}`)
 
-Ejemplo `POST /users`:
+### CRUD completo de Users (mismo que NutriFit, 5 endpoints)
+
+| Método | Ruta | Descripción | Body / Respuesta |
+|---|---|---|---|
+| `POST` | `/users` | Crea usuario activo | Body JSON completo, responde `201` con usuario |
+| `GET` | `/users` | Lista usuarios activos | Responde `200` con array |
+| `GET` | `/users/:id` | Obtiene usuario activo | Responde `200` o `404` si no existe/inactivo |
+| `PUT` | `/users/:id` | Actualiza campos | Body parcial, responde `200` |
+| `DELETE` | `/users/:id` | Soft delete (`isActive=false`) | Responde `200`, no borra de BD |
+
+**1) Crear usuario `POST /users`**
 ```json
 {
   "id": "1234567890",
@@ -78,12 +88,48 @@ Ejemplo `POST /users`:
   "phone": "+573101234567"
 }
 ```
-
-También puedes probar con curl:
 ```bash
-curl -X POST http://localhost:3000/users -H "Content-Type: application/json" -d '{"id":"1234567890","name":"Usuario de prueba","email":"prueba@seed.local","age":25,"phone":"+573101234567"}'
-curl http://localhost:3000/users
+curl -X POST http://localhost:3000/users \
+  -H "Content-Type: application/json" \
+  -d '{"id":"1234567890","name":"Usuario de prueba","email":"prueba@seed.local","age":25,"phone":"+573101234567"}'
+# → 201 Created { "id":"1234567890", ... , "isActive": true }
 ```
+
+**2) Listar usuarios `GET /users`**
+```bash
+curl http://localhost:3000/users
+# → 200 [ { "id":"1234567890", "name":"...", "email":"...", ... } ]
+```
+
+**3) Consultar usuario `GET /users/:id`**
+```bash
+curl http://localhost:3000/users/1234567890
+# → 200 { "id":"1234567890", ... }
+# → 404 si no existe o está desactivado
+```
+
+**4) Actualizar usuario `PUT /users/:id`** (todos los campos opcionales)
+```json
+{
+  "name": "Usuario de prueba actualizado",
+  "age": 26
+}
+```
+```bash
+curl -X PUT http://localhost:3000/users/1234567890 \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Usuario de prueba actualizado","age":26}'
+# → 200 { "id":"1234567890", "name":"Usuario de prueba actualizado", "age":26, ... }
+```
+
+**5) Desactivar usuario `DELETE /users/:id`** (soft delete)
+```bash
+curl -X DELETE http://localhost:3000/users/1234567890
+# → 200 (sin body)
+# Luego GET /users ya no lo lista y GET /users/1234567890 → 404
+```
+
+Validaciones: `id` 5-20 dígitos único, `email` único (se guarda lowercase/trim), `name` 2-100, `age` 0-130, `phone` `+?` 7-15 dígitos. Errores → `400` validación, `409` duplicado, `404` no encontrado.
 
 ## 6. Estructura que debes ver
 
