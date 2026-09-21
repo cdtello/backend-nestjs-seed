@@ -7,8 +7,10 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { CreateProductDto } from '../dto/create-product.dto';
+import { FilterProductDto } from '../dto/filter-product.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
 import { ProductsService } from '../services/products.service';
 
@@ -21,9 +23,10 @@ export class ProductsController {
     return this.productsService.create(createProductDto);
   }
 
+  // Rama 4: GET /products?name=whey&minPrice=10&maxPrice=200&minStock=1
   @Get()
-  findAll() {
-    return this.productsService.findAll();
+  findAll(@Query() filter: FilterProductDto) {
+    return this.productsService.findAll(filter);
   }
 
   @Get(':id')

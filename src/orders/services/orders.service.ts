@@ -6,6 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { CreateOrderDto } from '../dto/create-order.dto';
+import { FilterOrderDto } from '../dto/filter-order.dto';
 import { UpdateOrderDto } from '../dto/update-order.dto';
 import { Order, OrderStatus } from '../entities/order.entity';
 import { OrderItem } from '../entities/order-item.entity';
@@ -94,11 +95,24 @@ export class OrdersService {
     }
   }
 
-  findAll(): Promise<Order[]> {
-    return this.ordersRepository.find({
-      relations: ['items', 'user'],
-      order: { createdAt: 'DESC' },
-    });
+  // Rama 4: filtros simples (status, userId)
+  // Ej: GET /orders?status=PENDING&userId=1234567890
+  async findAll(filter?: FilterOrderDto): Promise<Order[]> {
+    const qb = this.ordersRepository
+      .createQueryBuilder('order')
+      .leftJoinAndSelect('order.items', 'item')
+      .leftJoinAndSelect('item.product', 'product')
+      .leftJoinAndSelect('order.user', 'user');
+
+    if (filter?.status) {
+      qb.andWhere('order.status = :status', { status: filter.status });
+    }
+    if (filter?.userId) {
+      qb.andWhere('order.userId = :userId', { userId: filter.userId });
+    }
+
+    qb.orderBy('order.createdAt', 'DESC');
+    return qb.getMany();
   }
 
   async findOne(id: string): Promise<Order> {

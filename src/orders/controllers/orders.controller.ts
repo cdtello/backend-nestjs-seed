@@ -7,8 +7,10 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { CreateOrderDto } from '../dto/create-order.dto';
+import { FilterOrderDto } from '../dto/filter-order.dto';
 import { UpdateOrderDto } from '../dto/update-order.dto';
 import { OrdersService } from '../services/orders.service';
 
@@ -21,9 +23,10 @@ export class OrdersController {
     return this.ordersService.create(dto);
   }
 
+  // Rama 4: GET /orders?status=PENDING&userId=1234567890
   @Get()
-  findAll() {
-    return this.ordersService.findAll();
+  findAll(@Query() filter: FilterOrderDto) {
+    return this.ordersService.findAll(filter);
   }
 
   // Debe ir antes de :id para no confundir /user/:userId con /:id

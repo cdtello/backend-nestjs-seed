@@ -1,129 +1,90 @@
-# Backend NestJS Seed — Rama 3 Órdenes (Tienda con relaciones)
+# Backend NestJS Seed — Rama 4 Filtros (sencillo)
 
-> **Rama actual:** `rama-3-ordenes` — añade **módulo `orders` con relaciones TypeORM + transacción** (didáctica Tienda). Ramas previas: `main` (seed), `rama-1-iniciacion` (users), `rama-2-productos` (users+products). Guía en [`GUIA_DESCARGA.md`](./GUIA_DESCARGA.md) · Postman en [`postman/backend-nestjs-seed.postman_collection.json`](./postman/backend-nestjs-seed.postman_collection.json).
+> **Rama actual:** `rama-4-filtros` — añade **filtros simples vía query params + QueryBuilder** sobre la tienda. Ramas: `main`, `rama-1-iniciacion` (users), `rama-2-productos`, `rama-3-ordenes`, `rama-4-filtros` (actual). Guía en [`GUIA_DESCARGA.md`](./GUIA_DESCARGA.md) · Postman en [`postman/backend-nestjs-seed.postman_collection.json`](./postman/backend-nestjs-seed.postman_collection.json).
 
-Seed NestJS 11 + TypeORM 0.3 + SQLite/Postgres. En esta rama se demuestra **cómo modelar una tienda mínima donde un Usuario compra Productos y se genera una Orden**.
+Seed NestJS 11 + TypeORM. En esta rama se demuestra **cómo filtrar listados de forma normal y sencilla sin meter complejidad**: `@Query()` + DTO + `QueryBuilder`.
 
-## Qué aprende en esta rama (didáctico)
+## Qué aprende en esta rama (didáctico, sencillo)
 
-- **Relaciones TypeORM:** `@ManyToOne`, `@OneToMany`, `@JoinColumn`, `cascade:true`, `eager:true`, `onDelete`
-- **Tabla pivote con datos:** `OrderItem` guarda `quantity` y `unitPrice` (precio histórico) — por qué no usar `ManyToMany` directo
-- **Transacción con `QueryRunner`:** validar stock, descontar stock, calcular total y crear orden de forma atómica (todo o nada)
-- **Enum + decimales:** `OrderStatus` y `decimal(10,2)` para dinero
+- **`@Query()` + DTO validado:** cómo Nest + `ValidationPipe(transform:true)` convierte `?minPrice=50` (string) a `number` con `@Type(()=>Number)` y valida
+- **`QueryBuilder` básico:** `where`, `andWhere`, `LIKE` case-insensitive con `LOWER()`, rangos `>=`/`<=`, `orderBy`
+- **Filtros sin paginación ni sorting complejo:** solo `where` opcional, ideal para clase inicial
+- **Por qué no `findBy` simple:** con filtros opcionales es más claro construir la query paso a paso que armar un `FindOptionsWhere` dinámico
 
 ## Stack
-- NestJS 11 + TypeScript 5.7 + ValidationPipe (`whitelist`, `forbidNonWhitelisted`, `transform`)
-- TypeORM + `@nestjs/typeorm` + `autoLoadEntities:true` + `synchronize:true` (dev)
-- `class-validator` / `class-transformer` para DTOs
+NestJS 11 + TypeORM + SQLite/Postgres + `class-validator`/`class-transformer`. `synchronize:true` dev.
 
 ## Estructura
 
 ```
 src/
   main.ts
-  app.module.ts           # + UsersModule + ProductsModule + OrdersModule
-  config/env.validation.ts
-  users/                  # Rama 1 - standalone
-    users.module.ts / controllers / services / entities / dto
-  products/               # Rama 2 - standalone
+  app.module.ts           # UsersModule + ProductsModule + OrdersModule
+  users/                  # Rama 1
+  products/               # Rama 2 + Rama 4 filtros
     products.module.ts / controllers / services / entities / dto
-  orders/                 # ← NUEVO Rama 3 (con relaciones)
-    orders.module.ts
-    controllers/orders.controller.ts
-    services/orders.service.ts
-    entities/order.entity.ts        # @ManyToOne(User) + @OneToMany(OrderItem) cascade
-    entities/order-item.entity.ts   # @ManyToOne(Order) + @ManyToOne(Product eager)
-    dto/create-order.dto.ts         # @ValidateNested + @ArrayMinSize(1)
-    dto/update-order.dto.ts
+    dto/filter-product.dto.ts   # ← NUEVO: name, minPrice, maxPrice, minStock, maxStock
+  orders/                 # Rama 3 + Rama 4 filtros
+    orders.module.ts / controllers / services / entities / dto
+    dto/filter-order.dto.ts     # ← NUEVO: status, userId
 data/app.sqlite
 ```
 
-## Guía rápida (Rama 3)
+## Guía rápida (Rama 4)
 
 ```bash
-git clone -b rama-3-ordenes https://github.com/cdtello/backend-nestjs-seed.git
-cd backend-nestjs-seed
-npm install
-cp .env.example .env
-npm run start:dev
-# API http://localhost:3000
-# Postman: importar postman/backend-nestjs-seed.postman_collection.json (Users + Products + Orders)
+git clone -b rama-4-filtros https://github.com/cdtello/backend-nestjs-seed.git
+cd backend-nestjs-seed && npm install && cp .env.example .env && npm run start:dev
+# http://localhost:3000
+# Postman: importar postman/backend-nestjs-seed.postman_collection.json (Users+Products+Orders con filtros)
 ```
 
-## Módulos previos
+## Módulos previos (resumen)
 
-### Users (Rama 1)
-| `POST` | `/users` | Crea | `GET` | `/users` | lista | `GET` | `/users/:id` | `PUT` | `/users/:id` | `DELETE` | `/users/:id` soft |
-Entidad `User`: `id` 5-20 dígitos PK, `email` único, `name` 2-100, `age` 0-130, `phone` +? 7-15.
+**Users:** `POST/GET/GET:id/PUT/DELETE` soft. **Products:** `POST/GET/GET:id/PUT/DELETE` soft (uuid). **Orders:** `POST /orders` con transacción + `GET /orders`, `GET /orders/:id`, `GET /orders/user/:userId`, `PUT /orders/:id`, `PUT /orders/:id/cancel`, `DELETE /orders/:id`.
 
-### Products (Rama 2)
-| `POST` | `/products` | `GET` | `/products` | `GET` | `/products/:id` | `PUT` | `/products/:id` | `DELETE` | `/products/:id` soft |
-Entidad `Product`: `id` uuid, `name` 2-120, `price` decimal 0.01-999999, `stock` 0-100000.
+## Novedad Rama 4: Filtros simples
 
-## Módulo nuevo Rama 3: Orders (con relaciones)
+**Products — `GET /products` con query opcional:**
+| Query | Tipo | Ejemplo | Efecto |
+|---|---|---|---|
+| `name` | string | `?name=whey` | `LOWER(name) LIKE %whey%` case-insensitive |
+| `minPrice` | number | `?minPrice=50` | `price >= 50` |
+| `maxPrice` | number | `?maxPrice=200` | `price <= 200` |
+| `minStock` | int | `?minStock=10` | `stock >= 10` |
+| `maxStock` | int | `?maxStock=100` | `stock <= 100` |
 
-**Diagrama:**
+Combinables: `GET /products?name=prote&minPrice=50&maxPrice=200&minStock=5`
+
+Código: `src/products/dto/filter-product.dto.ts:1` + `src/products/services/products.service.ts:22` (QueryBuilder) + `src/products/controllers/products.controller.ts:24` (`@Query() filter: FilterProductDto`).
+
+```bash
+curl "http://localhost:3000/products?name=whey"
+curl "http://localhost:3000/products?minPrice=50&maxPrice=200"
+curl "http://localhost:3000/products?name=prote&minStock=10&maxStock=100"
 ```
-User 1──N Order 1──N OrderItem N──1 Product
-```
-- `Order.user` → `@ManyToOne(User)` + `@JoinColumn(userId)` — FK explícita `userId`
-- `Order.items` → `@OneToMany(OrderItem, cascade:true)` — al guardar Order con items se guardan juntos
-- `OrderItem.order` → `@ManyToOne(Order, onDelete:CASCADE)`
-- `OrderItem.product` → `@ManyToOne(Product, eager:true)` — al traer items ya trae producto
 
-**Endpoints:**
-
-| Método | Ruta | Descripción |
+**Orders — `GET /orders` con query opcional:**
+| Query | Tipo | Ejemplo |
 |---|---|---|
-| `POST` | `/orders` | Crea orden con transacción (valida user, productos, stock, descuenta, calcula total) |
-| `GET` | `/orders` | Lista todas con `user` e `items.product` |
-| `GET` | `/orders/:id` | Detalle |
-| `GET` | `/orders/user/:userId` | Órdenes de un usuario |
-| `PUT` | `/orders/:id` | Cambia `status` (`PENDING`→`PAID`/`CANCELLED`) |
-| `PUT` | `/orders/:id/cancel` | Cancela y **restaura stock** (transacción) |
-| `DELETE` | `/orders/:id` | Borra (si PENDING primero restaura stock) |
+| `status` | enum `PENDING/PAID/CANCELLED` | `?status=PENDING` |
+| `userId` | 5-20 dígitos | `?userId=1234567890` |
 
-**Ejemplo crear orden:**
+Combinables: `GET /orders?status=PENDING&userId=1234567890`
+
+Código: `src/orders/dto/filter-order.dto.ts:1` + `src/orders/services/orders.service.ts:17` + `src/orders/controllers/orders.controller.ts:24`.
+
 ```bash
-# 1. Crear usuario y producto primero, guarda sus ids en variables
-curl -X POST http://localhost:3000/orders -H "Content-Type: application/json" \
-  -d '{"userId":"1234567890","items":[{"productId":"<uuid>","quantity":2}]}'
-# → 201 { "id":"uuid", "userId":"1234567890", "total":"259.80", "status":"PENDING",
-#         "items":[{"quantity":2,"unitPrice":"129.90","product":{...}}] }
-
-# Con 2 productos
-curl -X POST http://localhost:3000/orders -H "Content-Type: application/json" \
-  -d '{"userId":"1234567890","items":[{"productId":"<uuid1>","quantity":1},{"productId":"<uuid2>","quantity":3}]}'
-
-# Listar / consultar / por usuario
-curl http://localhost:3000/orders
-curl http://localhost:3000/orders/<orderId>
+curl "http://localhost:3000/orders?status=PENDING"
+curl "http://localhost:3000/orders?userId=1234567890"
+curl "http://localhost:3000/orders?status=PENDING&userId=1234567890"
+# Sigue funcionando GET /orders/user/:userId para URL limpia
 curl http://localhost:3000/orders/user/1234567890
-
-# Cambiar estado / cancelar
-curl -X PUT http://localhost:3000/orders/<orderId> -H "Content-Type: application/json" -d '{"status":"PAID"}'
-curl -X PUT http://localhost:3000/orders/<orderId>/cancel
 ```
 
-**Validaciones y errores:**
-- `userId` debe existir y `isActive=true` → `404`
-- `productId` uuid debe existir y `isActive=true` → `404`
-- `quantity` 1-100, `stock` insuficiente → `400 BadRequest`
-- Solo `PENDING` puede pasar a `PAID`/`CANCELLED` → `400`
-- Transacción `QueryRunner`: si falla algo hace `rollback`, no queda stock a medias
-
-**Código clave a estudiar:**
-- `src/orders/entities/order.entity.ts:1` y `order-item.entity.ts:1` — decoradores de relación
-- `src/orders/services/orders.service.ts:17` — `create()` con `createQueryRunner().startTransaction()`, `commit`/`rollback`
-- `src/orders/dto/create-order.dto.ts:1` — `@ValidateNested({each:true})` + `@Type(()=>CreateOrderItemDto)`
+**Validación:** si mandas `?minPrice=abc` o `?status=INVALID` → `400` por `ValidationPipe`. Si no mandas nada, lista todo (comportamiento previo).
 
 ## Scripts
 ```bash
 npm run format && npm run lint && npm run build && npm run start:dev
-```
-
-## Generadores usados
-```bash
-# Rama 2: nest g resource products --type rest --no-spec
-# Rama 3: nest g module orders && nest g controller/service para orders
 ```
