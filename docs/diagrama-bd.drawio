@@ -1,72 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mxfile host="app.diagrams.net" version="21.5.0">
-  <diagram id="efd76405-e346-4212-8dcc-f7d55c5d292d" name="ERD - Tienda (Users-Products-Orders)">
-    <mxGraphModel dx="1422" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+  <diagram id="db2c5c9d-1df6-4d38-ae4b-0fe98da3bcdd" name="ERD - Tienda (Users-Products-Orders)">
+    <mxGraphModel dx="1422" dy="763" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0"/>
         <mxCell id="1" parent="0"/>
-        <!-- USERS TABLE -->
-        <mxCell id="users" value="users" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
-          <mxGeometry x="80" y="80" width="200" height="150" as="geometry"/>
-        </mxCell>
-        <mxCell id="users-col-id" value="PK  id  varchar(20)" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;" vertex="1" parent="users"><mxGeometry y="30" width="200" height="20" as="geometry"/></mxCell>
-        <mxCell id="users-col-name" value="name  varchar(100)" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;" vertex="1" parent="users"><mxGeometry y="50" width="200" height="20" as="geometry"/></mxCell>
-        <mxCell id="users-col-email" value="UQ  email  varchar(254)" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;" vertex="1" parent="users"><mxGeometry y="70" width="200" height="20" as="geometry"/></mxCell>
-        <mxCell id="users-col-age" value="age  integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;" vertex="1" parent="users"><mxGeometry y="90" width="200" height="20" as="geometry"/></mxCell>
-        <mxCell id="users-col-phone" value="phone  varchar(30)" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;" vertex="1" parent="users"><mxGeometry y="110" width="200" height="20" as="geometry"/></mxCell>
-        <mxCell id="users-col-active" value="isActive  boolean  default true" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;" vertex="1" parent="users"><mxGeometry y="130" width="200" height="20" as="geometry"/></mxCell>
-
-        <!-- PRODUCTS TABLE -->
-        <mxCell id="products" value="products" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
-          <mxGeometry x="380" y="80" width="220" height="170" as="geometry"/>
-        </mxCell>
-        <mxCell id="products-col-id" value="PK  id  uuid" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;" vertex="1" parent="products"><mxGeometry y="30" width="220" height="20" as="geometry"/></mxCell>
-        <mxCell id="products-col-name" value="name  varchar(120)" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;" vertex="1" parent="products"><mxGeometry y="50" width="220" height="20" as="geometry"/></mxCell>
-        <mxCell id="products-col-desc" value="description  text  nullable" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;" vertex="1" parent="products"><mxGeometry y="70" width="220" height="20" as="geometry"/></mxCell>
-        <mxCell id="products-col-price" value="price  decimal(10,2)" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;" vertex="1" parent="products"><mxGeometry y="90" width="220" height="20" as="geometry"/></mxCell>
-        <mxCell id="products-col-stock" value="stock  integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;" vertex="1" parent="products"><mxGeometry y="110" width="220" height="20" as="geometry"/></mxCell>
-        <mxCell id="products-col-active" value="isActive  boolean  default true" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;" vertex="1" parent="products"><mxGeometry y="130" width="220" height="20" as="geometry"/></mxCell>
-        <mxCell id="products-col-created" value="createdAt  timestamp" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;" vertex="1" parent="products"><mxGeometry y="150" width="220" height="20" as="geometry"/></mxCell>
-
-        <!-- ORDERS TABLE -->
-        <mxCell id="orders" value="orders" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
-          <mxGeometry x="80" y="310" width="220" height="150" as="geometry"/>
-        </mxCell>
-        <mxCell id="orders-col-id" value="PK  id  uuid" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;" vertex="1" parent="orders"><mxGeometry y="30" width="220" height="20" as="geometry"/></mxCell>
-        <mxCell id="orders-col-user" value="FK  userId  varchar → users.id" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;" vertex="1" parent="orders"><mxGeometry y="50" width="220" height="20" as="geometry"/></mxCell>
-        <mxCell id="orders-col-total" value="total  decimal(10,2)" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;" vertex="1" parent="orders"><mxGeometry y="70" width="220" height="20" as="geometry"/></mxCell>
-        <mxCell id="orders-col-status" value="status  enum PENDING|PAID|CANCELLED" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;" vertex="1" parent="orders"><mxGeometry y="90" width="220" height="20" as="geometry"/></mxCell>
-        <mxCell id="orders-col-created" value="createdAt  timestamp" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;" vertex="1" parent="orders"><mxGeometry y="110" width="220" height="20" as="geometry"/></mxCell>
-        <mxCell id="orders-col-items" value="↗ 1—N  items → order_items" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;fontStyle=2;" vertex="1" parent="orders"><mxGeometry y="130" width="220" height="20" as="geometry"/></mxCell>
-
-        <!-- ORDER_ITEMS TABLE -->
-        <mxCell id="order_items" value="order_items" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
-          <mxGeometry x="380" y="310" width="240" height="150" as="geometry"/>
-        </mxCell>
-        <mxCell id="oi-col-id" value="PK  id  uuid" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;" vertex="1" parent="order_items"><mxGeometry y="30" width="240" height="20" as="geometry"/></mxCell>
-        <mxCell id="oi-col-order" value="FK  orderId  uuid → orders.id  CASCADE" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;" vertex="1" parent="order_items"><mxGeometry y="50" width="240" height="20" as="geometry"/></mxCell>
-        <mxCell id="oi-col-prod" value="FK  productId  uuid → products.id" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;" vertex="1" parent="order_items"><mxGeometry y="70" width="240" height="20" as="geometry"/></mxCell>
-        <mxCell id="oi-col-qty" value="quantity  integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;" vertex="1" parent="order_items"><mxGeometry y="90" width="240" height="20" as="geometry"/></mxCell>
-        <mxCell id="oi-col-price" value="unitPrice  decimal(10,2)  snapshot" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;" vertex="1" parent="order_items"><mxGeometry y="110" width="240" height="20" as="geometry"/></mxCell>
-        <mxCell id="oi-col-note" value="eager: product se carga con item" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;fontStyle=2;" vertex="1" parent="order_items"><mxGeometry y="130" width="240" height="20" as="geometry"/></mxCell>
-
-        <!-- RELATION EDGES -->
-        <mxCell id="rel-users-orders" style="edgeStyle=entityRelationEdgeStyle;endArrow=ERmany;startArrow=ERone;fontSize=12;html=1;strokeColor=#6c8ebf;startFill=1;endFill=1;" edge="1" parent="1" source="users" target="orders">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="180" y="270"/><mxPoint x="180" y="310"/></Array></mxGeometry>
-        </mxCell>
-        <mxCell id="rel-orders-items" style="edgeStyle=entityRelationEdgeStyle;endArrow=ERmany;startArrow=ERone;fontSize=12;html=1;strokeColor=#d79b00;" edge="1" parent="1" source="orders" target="order_items">
-          <mxGeometry relative="1" as="geometry"/></mxCell>
-        <mxCell id="rel-products-items" style="edgeStyle=entityRelationEdgeStyle;endArrow=ERmany;startArrow=ERone;fontSize=12;html=1;strokeColor=#82b366;" edge="1" parent="1" source="products" target="order_items">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="500" y="270"/><mxPoint x="500" y="310"/></Array></mxGeometry>
-        </mxCell>
-
         <!-- TITLE -->
-        <mxCell id="title" value="Backend NestJS Seed — ERD Tienda  |  Users 1—N Orders 1—N OrderItems N—1 Products  |  Transacción en OrdersService.create()  |  Rama 4: filtros con QueryBuilder" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1" vertex="1" parent="1">
-          <mxGeometry x="80" y="10" width="680" height="30" as="geometry"/>
+        <mxCell id="title" value="Backend NestJS Seed — ERD Tienda  |  Users 1—N Orders 1—N OrderItems N—1 Products" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="1080" height="30" as="geometry"/>
         </mxCell>
+        <!-- USERS TABLE - left top -->
+        <mxCell id="users" value="users" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;fillColor=#dae8fc;strokeColor=#6c8ebf;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="260" height="160" as="geometry"/>
+        </mxCell>
+        <mxCell id="users-col-id" value="PK  id  varchar(20)" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;strokeColor=#6c8ebf;" vertex="1" parent="users"><mxGeometry y="30" width="260" height="22" as="geometry"/></mxCell>
+        <mxCell id="users-col-name" value="name  varchar(100)" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;strokeColor=#6c8ebf;" vertex="1" parent="users"><mxGeometry y="52" width="260" height="22" as="geometry"/></mxCell>
+        <mxCell id="users-col-email" value="UQ  email  varchar(254)" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;strokeColor=#6c8ebf;" vertex="1" parent="users"><mxGeometry y="74" width="260" height="22" as="geometry"/></mxCell>
+        <mxCell id="users-col-age" value="age  integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;strokeColor=#6c8ebf;" vertex="1" parent="users"><mxGeometry y="96" width="260" height="22" as="geometry"/></mxCell>
+        <mxCell id="users-col-phone" value="phone  varchar(30)" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;strokeColor=#6c8ebf;" vertex="1" parent="users"><mxGeometry y="118" width="260" height="22" as="geometry"/></mxCell>
+        <mxCell id="users-col-active" value="isActive  boolean" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;strokeColor=#6c8ebf;" vertex="1" parent="users"><mxGeometry y="140" width="260" height="20" as="geometry"/></mxCell>
+
+        <!-- PRODUCTS TABLE - right top -->
+        <mxCell id="products" value="products" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;fillColor=#d5e8d4;strokeColor=#82b366;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="620" y="80" width="300" height="184" as="geometry"/>
+        </mxCell>
+        <mxCell id="products-col-id" value="PK  id  uuid" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;strokeColor=#82b366;" vertex="1" parent="products"><mxGeometry y="30" width="300" height="22" as="geometry"/></mxCell>
+        <mxCell id="products-col-name" value="name  varchar(120)" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;strokeColor=#82b366;" vertex="1" parent="products"><mxGeometry y="52" width="300" height="22" as="geometry"/></mxCell>
+        <mxCell id="products-col-desc" value="description  text  nullable" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;strokeColor=#82b366;" vertex="1" parent="products"><mxGeometry y="74" width="300" height="22" as="geometry"/></mxCell>
+        <mxCell id="products-col-price" value="price  decimal(10,2)" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;strokeColor=#82b366;" vertex="1" parent="products"><mxGeometry y="96" width="300" height="22" as="geometry"/></mxCell>
+        <mxCell id="products-col-stock" value="stock  integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;strokeColor=#82b366;" vertex="1" parent="products"><mxGeometry y="118" width="300" height="22" as="geometry"/></mxCell>
+        <mxCell id="products-col-active" value="isActive  boolean" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;strokeColor=#82b366;" vertex="1" parent="products"><mxGeometry y="140" width="300" height="22" as="geometry"/></mxCell>
+        <mxCell id="products-col-created" value="createdAt  timestamp" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;strokeColor=#82b366;" vertex="1" parent="products"><mxGeometry y="162" width="300" height="22" as="geometry"/></mxCell>
+
+        <!-- ORDERS TABLE - left bottom -->
+        <mxCell id="orders" value="orders" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;fillColor=#ffe6cc;strokeColor=#d79b00;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="340" width="320" height="162" as="geometry"/>
+        </mxCell>
+        <mxCell id="orders-col-id" value="PK  id  uuid" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;strokeColor=#d79b00;" vertex="1" parent="orders"><mxGeometry y="30" width="320" height="22" as="geometry"/></mxCell>
+        <mxCell id="orders-col-user" value="FK  userId  → users.id" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;strokeColor=#d79b00;" vertex="1" parent="orders"><mxGeometry y="52" width="320" height="22" as="geometry"/></mxCell>
+        <mxCell id="orders-col-total" value="total  decimal(10,2)" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;strokeColor=#d79b00;" vertex="1" parent="orders"><mxGeometry y="74" width="320" height="22" as="geometry"/></mxCell>
+        <mxCell id="orders-col-status" value="status  PENDING | PAID | CANCELLED" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;strokeColor=#d79b00;" vertex="1" parent="orders"><mxGeometry y="96" width="320" height="22" as="geometry"/></mxCell>
+        <mxCell id="orders-col-created" value="createdAt  timestamp" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;strokeColor=#d79b00;" vertex="1" parent="orders"><mxGeometry y="118" width="320" height="22" as="geometry"/></mxCell>
+        <mxCell id="orders-col-items" value="↗  1—N  items  (cascade)" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;fontStyle=2;strokeColor=#d79b00;" vertex="1" parent="orders"><mxGeometry y="140" width="320" height="22" as="geometry"/></mxCell>
+
+        <!-- ORDER_ITEMS TABLE - right bottom -->
+        <mxCell id="order_items" value="order_items" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;fillColor=#fff2cc;strokeColor=#d6b656;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="620" y="340" width="320" height="162" as="geometry"/>
+        </mxCell>
+        <mxCell id="oi-col-id" value="PK  id  uuid" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;strokeColor=#d6b656;" vertex="1" parent="order_items"><mxGeometry y="30" width="320" height="22" as="geometry"/></mxCell>
+        <mxCell id="oi-col-order" value="FK  orderId  → orders.id  CASCADE" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;strokeColor=#d6b656;" vertex="1" parent="order_items"><mxGeometry y="52" width="320" height="22" as="geometry"/></mxCell>
+        <mxCell id="oi-col-prod" value="FK  productId  → products.id" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;strokeColor=#d6b656;" vertex="1" parent="order_items"><mxGeometry y="74" width="320" height="22" as="geometry"/></mxCell>
+        <mxCell id="oi-col-qty" value="quantity  integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;strokeColor=#d6b656;" vertex="1" parent="order_items"><mxGeometry y="96" width="320" height="22" as="geometry"/></mxCell>
+        <mxCell id="oi-col-price" value="unitPrice  decimal(10,2)  snapshot" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;strokeColor=#d6b656;" vertex="1" parent="order_items"><mxGeometry y="118" width="320" height="22" as="geometry"/></mxCell>
+        <mxCell id="oi-col-note" value="eager: product" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;fontStyle=2;strokeColor=#d6b656;" vertex="1" parent="order_items"><mxGeometry y="140" width="320" height="22" as="geometry"/></mxCell>
+
+        <!-- RELATIONS -->
+        <mxCell id="rel-users-orders" value="1 — N" style="edgeStyle=entityRelationEdgeStyle;endArrow=ERmany;startArrow=ERone;html=1;strokeColor=#6c8ebf;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="users" target="orders"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="rel-orders-items" value="1 — N" style="edgeStyle=entityRelationEdgeStyle;endArrow=ERmany;startArrow=ERone;html=1;strokeColor=#d79b00;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="orders" target="order_items"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="rel-products-items" value="1 — N" style="edgeStyle=entityRelationEdgeStyle;endArrow=ERmany;startArrow=ERone;html=1;strokeColor=#82b366;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="products" target="order_items"><mxGeometry relative="1" as="geometry"/></mxCell>
+
         <!-- LEGEND -->
-        <mxCell id="legend" value="&#xa;Notas didácticas:&#xa;• PK = Primary Key, FK = Foreign Key, UQ = Unique&#xa;• order_items es tabla pivote con datos (quantity, unitPrice) — no es ManyToMany directo&#xa;• unitPrice es snapshot histórico, no cambia si products.price cambia&#xa;• CASCADE: al borrar orders se borran sus order_items&#xa;• Filtros Rama 4: Products ?name=&amp;minPrice=&amp;maxPrice=&amp;minStock=  Orders ?status=&amp;userId=" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="80" y="500" width="680" height="80" as="geometry"/>
+        <mxCell id="legend" value="Notas: PK=Primary Key • FK=Foreign Key • UQ=Unique • order_items es pivote con datos (no ManyToMany) • unitPrice snapshot histórico • CASCADE: borrar orders borra items • Filtros Rama 4: Products ?name=&amp;minPrice=&amp;maxPrice=&amp;minStock=  Orders ?status=&amp;userId=" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="40" y="560" width="900" height="50" as="geometry"/>
         </mxCell>
       </root>
     </mxGraphModel>
