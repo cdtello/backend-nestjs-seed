@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule, type TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { validateEnvironment } from './config/env.validation';
+import { ProductsModule } from './products/products.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -51,6 +52,7 @@ import { UsersModule } from './users/users.module';
       },
     }),
     UsersModule,
+    ProductsModule,
   ],
 })
 export class AppModule {}

@@ -1,6 +1,6 @@
-# Backend NestJS Seed — Rama 1 Iniciación
+# Backend NestJS Seed — Rama 2 Productos
 
-> **Rama actual:** `rama-1-iniciacion` — base limpia tal cual iniciación. Para la guía paso a paso ver [`GUIA_DESCARGA.md`](./GUIA_DESCARGA.md) y colección Postman en [`postman/`](./postman/backend-nestjs-seed.postman_collection.json).
+> **Rama actual:** `rama-2-productos` — añade módulo `products` standalone (sin relaciones aún, base para tienda). Rama 1 queda intacta en `rama-1-iniciacion`. Guía en [`GUIA_DESCARGA.md`](./GUIA_DESCARGA.md) · Postman en [`postman/backend-nestjs-seed.postman_collection.json`](./postman/backend-nestjs-seed.postman_collection.json).
 
 Seed base genérico NestJS + TypeORM + TypeScript, clonado de `nutrifit-backend`. Misma estructura y mismo módulo `users` como ejemplo.
 
@@ -15,9 +15,9 @@ Seed base genérico NestJS + TypeORM + TypeScript, clonado de `nutrifit-backend`
 ```
 src/
   main.ts                 # bootstrap + ValidationPipe global
-  app.module.ts           # ConfigModule + TypeOrmModule.forRootAsync + UsersModule
+  app.module.ts           # ConfigModule + TypeOrmModule.forRootAsync + UsersModule + ProductsModule
   config/
-    env.validation.ts     # valida PORT, DB_TYPE, DB_SYNCHRONIZE, DB_LOGGING (+ Postgres)
+    env.validation.ts
   users/
     users.module.ts
     controllers/users.controller.ts
@@ -25,24 +25,31 @@ src/
     entities/user.entity.ts
     dto/create-user.dto.ts
     dto/update-user.dto.ts
+  products/               # ← NUEVO Rama 2 (standalone)
+    products.module.ts
+    controllers/products.controller.ts
+    services/products.service.ts
+    entities/product.entity.ts
+    dto/create-product.dto.ts
+    dto/update-product.dto.ts
 data/
-  app.sqlite              # creado automáticamente con DB_TYPE=sqlite (ignorado por git)
+  app.sqlite
 ```
 
 Clonado 1:1 de `nutrifit-backend/src`.
 
-## Guía rápida (Rama 1)
+## Guía rápida (Rama 2)
 
 Ver guía completa en [`GUIA_DESCARGA.md`](./GUIA_DESCARGA.md).
 
 ```bash
-git clone -b rama-1-iniciacion https://github.com/cdtello/backend-nestjs-seed.git
+git clone -b rama-2-productos https://github.com/cdtello/backend-nestjs-seed.git
 cd backend-nestjs-seed
 npm install
 cp .env.example .env
 npm run start:dev
 # API en http://localhost:3000
-# Probar con Postman: importar postman/backend-nestjs-seed.postman_collection.json
+# Postman: importar postman/backend-nestjs-seed.postman_collection.json (carpetas Users + Products)
 ```
 
 ## Inicio local
@@ -103,7 +110,7 @@ Entidad `User` (`src/users/entities/user.entity.ts`):
 
 DTOs con validación y lógica de unicidad en `UsersService` (`ConflictException` / `NotFoundException`).
 
-Ejemplos CRUD completos (ver también `GUIA_DESCARGA.md` y `postman/backend-nestjs-seed.postman_collection.json` con las 5 requests):
+Ejemplos CRUD Users (ver también `GUIA_DESCARGA.md` y `postman/backend-nestjs-seed.postman_collection.json`):
 
 ```bash
 # 1. POST /users - crear
@@ -137,6 +144,47 @@ Content-Type: application/json
   "age": 30,
   "phone": "+573101234567"
 }
+```
+
+## Módulo nuevo Rama 2: Products (standalone)
+
+Sin relaciones aún — base para la tienda (Rama 3 unirá User + Product → Order).
+
+| Método | Ruta | Descripción |
+| --- | --- | --- |
+| `POST` | `/products` | Crea producto activo |
+| `GET` | `/products` | Lista productos activos |
+| `GET` | `/products/:id` | Obtiene producto por UUID |
+| `PUT` | `/products/:id` | Actualiza campos |
+| `DELETE` | `/products/:id` | Soft delete (`isActive=false`) |
+
+Entidad `Product` (`src/products/entities/product.entity.ts`):
+- `id` UUID PK auto
+- `name` 2-120
+- `description` opcional 0-500
+- `price` 0.01 - 999999 (decimal 10,2)
+- `stock` 0 - 100000 (int)
+- `isActive` + `createdAt`
+
+Ejemplos:
+```bash
+# Crear
+curl -X POST http://localhost:3000/products -H "Content-Type: application/json" \
+  -d '{"name":"Proteína Whey","description":"900g vainilla","price":129.9,"stock":50}'
+# → 201 { "id":"uuid", "name":"Proteína Whey", ... }
+
+# Listar
+curl http://localhost:3000/products
+
+# Consultar (usa el uuid retornado)
+curl http://localhost:3000/products/<uuid>
+
+# Actualizar
+curl -X PUT http://localhost:3000/products/<uuid> -H "Content-Type: application/json" \
+  -d '{"price":119.9,"stock":45}'
+
+# Eliminar (soft)
+curl -X DELETE http://localhost:3000/products/<uuid>
 ```
 
 ## Scripts

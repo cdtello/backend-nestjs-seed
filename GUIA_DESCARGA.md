@@ -1,6 +1,8 @@
-# Guía de Descarga - Rama 1 Iniciación
+# Guía de Descarga - Rama 2 Productos
 
-Esta rama es la **base limpia** del seed. No tiene lógica adicional: solo NestJS + TypeORM + módulo `users` de ejemplo.
+> Rama 2 añade **módulo `products` standalone** (sin relaciones). Si vienes de Rama 1, es el mismo paso de instalación. Para Rama 1 ver tag `rama-1-iniciacion`.
+
+Esta rama es **Rama 1 + Products**. Aún sin `orders` (eso es Rama 3).
 
 ## Requisitos previos
 
@@ -8,16 +10,16 @@ Esta rama es la **base limpia** del seed. No tiene lógica adicional: solo NestJ
 - Git
 - Postman o similar para probar la API (opcional)
 
-## 1. Clonar el repositorio (rama 1)
+## 1. Clonar el repositorio (rama 2)
 
 ```bash
-# Clonar solo la rama de iniciación
-git clone -b rama-1-iniciacion https://github.com/cdtello/backend-nestjs-seed.git
+# Clonar solo rama 2
+git clone -b rama-2-productos https://github.com/cdtello/backend-nestjs-seed.git
 
-# o clonar todo y cambiarse a la rama
+# o clonar todo y cambiarse
 git clone https://github.com/cdtello/backend-nestjs-seed.git
 cd backend-nestjs-seed
-git checkout rama-1-iniciacion
+git checkout rama-2-productos
 ```
 
 ## 2. Instalar dependencias
@@ -131,12 +133,42 @@ curl -X DELETE http://localhost:3000/users/1234567890
 
 Validaciones: `id` 5-20 dígitos único, `email` único (se guarda lowercase/trim), `name` 2-100, `age` 0-130, `phone` `+?` 7-15 dígitos. Errores → `400` validación, `409` duplicado, `404` no encontrado.
 
-## 6. Estructura que debes ver
+## 6. Probar Products (nuevo en Rama 2, CRUD standalone)
+
+Colección: `postman/backend-nestjs-seed.postman_collection.json` → carpeta **Products** (5 requests). Flujo:
+1. **Crear producto** `POST /products` → guarda el `id` uuid retornado en variable `productId`
+2. **Listar** `GET /products`
+3. **Consultar** `GET /products/{{productId}}`
+4. **Actualizar** `PUT /products/{{productId}}`
+5. **Eliminar (soft)** `DELETE /products/{{productId}}`
+
+```bash
+# Crear
+curl -X POST http://localhost:3000/products -H "Content-Type: application/json" \
+  -d '{"name":"Proteína Whey","description":"900g vainilla","price":129.9,"stock":50}'
+
+# Listar
+curl http://localhost:3000/products
+
+# Consultar
+curl http://localhost:3000/products/<uuid>
+
+# Actualizar
+curl -X PUT http://localhost:3000/products/<uuid> -H "Content-Type: application/json" \
+  -d '{"price":119.9,"stock":45}'
+
+# Eliminar
+curl -X DELETE http://localhost:3000/products/<uuid>
+```
+
+Validaciones product: `name` 2-120, `description` ≤500, `price` 0.01-999999, `stock` 0-100000.
+
+## 7. Estructura que debes ver
 
 ```
 src/
   main.ts
-  app.module.ts
+  app.module.ts            # + ProductsModule
   config/env.validation.ts
   users/
     users.module.ts
@@ -145,6 +177,13 @@ src/
     entities/user.entity.ts
     dto/create-user.dto.ts
     dto/update-user.dto.ts
+  products/                # ← Rama 2
+    products.module.ts
+    controllers/products.controller.ts
+    services/products.service.ts
+    entities/product.entity.ts
+    dto/create-product.dto.ts
+    dto/update-product.dto.ts
 ```
 
 Si el paso 4 arrancó sin errores y el 5 devuelve `201`/`200`, la instalación fue exitosa.

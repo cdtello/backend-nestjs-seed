@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "b1a2c3d4-e5f6-7890-abcd-ef1234567890",
     "name": "Backend NestJS Seed API",
-    "description": "Colección base para probar el seed. Rama 1 - Iniciación. Incluye módulo Users (mismo que NutriFit). Ejecuta 'Crear usuario' primero y usa la variable userId para las rutas con ID. BaseUrl por defecto http://localhost:3000",
+    "description": "Colección base para probar el seed. Rama 1: Users. Rama 2: + Products (standalone, sin relaciones aún). Rama 3: + Orders. Ejecuta 'Crear' primero y usa variables userId/productId/orderId. baseUrl http://localhost:3000",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -13,80 +13,102 @@
     {
       "key": "userId",
       "value": "1234567890"
+    },
+    {
+      "key": "productId",
+      "value": ""
+    },
+    {
+      "key": "orderId",
+      "value": ""
     }
   ],
   "item": [
     {
       "name": "Users",
-      "description": "Módulo de usuarios - CRUD completo con soft delete. Requiere haber creado un usuario antes de consultar/actualizar/eliminar por ID.",
+      "description": "Módulo de usuarios - CRUD completo con soft delete. Rama 1.",
       "item": [
         {
           "name": "Crear usuario",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"id\": \"1234567890\",\n  \"name\": \"Usuario de prueba\",\n  \"email\": \"prueba@seed.local\",\n  \"age\": 25,\n  \"phone\": \"+573101234567\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": { "raw": { "language": "json" } }
             },
             "url": "{{baseUrl}}/users"
           }
         },
         {
           "name": "Listar usuarios",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": "{{baseUrl}}/users"
-          }
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/users" }
         },
         {
           "name": "Consultar usuario",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": "{{baseUrl}}/users/{{userId}}"
-          }
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/users/{{userId}}" }
         },
         {
           "name": "Actualizar usuario",
           "request": {
             "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"Usuario de prueba actualizado\",\n  \"age\": 26\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": { "raw": { "language": "json" } }
             },
             "url": "{{baseUrl}}/users/{{userId}}"
           }
         },
         {
           "name": "Desactivar usuario",
+          "request": { "method": "DELETE", "header": [], "url": "{{baseUrl}}/users/{{userId}}" }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "description": "Módulo de productos - CRUD standalone (Rama 2). Sin relaciones aún. Usa productId variable. Guarda el id que retorna 'Crear producto' para consultar/actualizar/eliminar.",
+      "item": [
+        {
+          "name": "Crear producto",
           "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": "{{baseUrl}}/users/{{userId}}"
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Proteína Whey\",\n  \"description\": \"Proteína aislada 900g sabor vainilla\",\n  \"price\": 129.9,\n  \"stock\": 50\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/products"
           }
+        },
+        {
+          "name": "Listar productos",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/products" }
+        },
+        {
+          "name": "Consultar producto",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/products/{{productId}}" }
+        },
+        {
+          "name": "Actualizar producto",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": 119.9,\n  \"stock\": 45\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/products/{{productId}}"
+          }
+        },
+        {
+          "name": "Eliminar producto (soft)",
+          "request": { "method": "DELETE", "header": [], "url": "{{baseUrl}}/products/{{productId}}" }
         }
       ]
     }
