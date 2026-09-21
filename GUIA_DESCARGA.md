@@ -1,189 +1,130 @@
-# Guía de Descarga - Rama 2 Productos
+# Guía de Descarga — Rama 3 Órdenes (Tienda didáctica)
 
-> Rama 2 añade **módulo `products` standalone** (sin relaciones). Si vienes de Rama 1, es el mismo paso de instalación. Para Rama 1 ver tag `rama-1-iniciacion`.
+> **Rama 3 = Rama 2 + módulo `orders` con relaciones.** Si ya tienes Rama 2, es el mismo flujo de instalación. Ramas: `rama-1-iniciacion` (users), `rama-2-productos` (users+products), `rama-3-ordenes` (tienda completa).
 
-Esta rama es **Rama 1 + Products**. Aún sin `orders` (eso es Rama 3).
+**Objetivo didáctico de esta rama:** entender relaciones TypeORM 1-N, tabla pivote con datos (`OrderItem`), y transacción atómica para crear una orden.
 
-## Requisitos previos
+## Requisitos
+Node 20+, npm 10+, Git, Postman opcional.
 
-- Node.js 20+ y npm 10+ (`node -v` / `npm -v`)
-- Git
-- Postman o similar para probar la API (opcional)
-
-## 1. Clonar el repositorio (rama 2)
-
+## 1. Clonar rama 3
 ```bash
-# Clonar solo rama 2
-git clone -b rama-2-productos https://github.com/cdtello/backend-nestjs-seed.git
-
-# o clonar todo y cambiarse
-git clone https://github.com/cdtello/backend-nestjs-seed.git
+git clone -b rama-3-ordenes https://github.com/cdtello/backend-nestjs-seed.git
 cd backend-nestjs-seed
-git checkout rama-2-productos
+# o
+git clone https://github.com/cdtello/backend-nestjs-seed.git && cd backend-nestjs-seed && git checkout rama-3-ordenes
 ```
 
-## 2. Instalar dependencias
-
+## 2. Instalar y configurar
 ```bash
-cd backend-nestjs-seed
 npm install
-```
-
-## 3. Configurar variables de entorno
-
-```bash
 cp .env.example .env
-# Edita .env si quieres cambiar PORT o usar Postgres
-cat .env
+cat .env  # DB_TYPE=sqlite por defecto crea data/app.sqlite solo
 ```
 
-Por defecto usa SQLite y crea `data/app.sqlite` automáticamente.
-
-## 4. Ejecutar en desarrollo
-
+## 3. Arrancar
 ```bash
 npm run start:dev
+# Nest application successfully started → http://localhost:3000
 ```
 
-Verás: `Nest application successfully started` en `http://localhost:3000`
-
-Para salir: `Ctrl + C`
-
-Otros comandos:
-```bash
-npm run build      # compila a dist/
-npm run start:prod # ejecuta dist/main.js
-npm run lint       # verifica eslint
-npm run format     # formatea con prettier
-```
-
-## 5. Probar con Postman
-
-Colección incluida: `postman/backend-nestjs-seed.postman_collection.json`
-
-1. Abre Postman → Import → selecciona el archivo `postman/backend-nestjs-seed.postman_collection.json`
-2. Verifica variable `baseUrl` = `http://localhost:3000`
-3. Ejecuta en orden:
-   - **Crear usuario** (`POST /users`)
-   - **Listar usuarios** (`GET /users`)
-   - **Consultar usuario** (`GET /users/{{userId}}`) - usa el id creado
-   - **Actualizar usuario** (`PUT /users/{{userId}}`)
-   - **Desactivar usuario** (`DELETE /users/{{userId}}`)
-
-### CRUD completo de Users (mismo que NutriFit, 5 endpoints)
-
-| Método | Ruta | Descripción | Body / Respuesta |
-|---|---|---|---|
-| `POST` | `/users` | Crea usuario activo | Body JSON completo, responde `201` con usuario |
-| `GET` | `/users` | Lista usuarios activos | Responde `200` con array |
-| `GET` | `/users/:id` | Obtiene usuario activo | Responde `200` o `404` si no existe/inactivo |
-| `PUT` | `/users/:id` | Actualiza campos | Body parcial, responde `200` |
-| `DELETE` | `/users/:id` | Soft delete (`isActive=false`) | Responde `200`, no borra de BD |
-
-**1) Crear usuario `POST /users`**
-```json
-{
-  "id": "1234567890",
-  "name": "Usuario de prueba",
-  "email": "prueba@seed.local",
-  "age": 25,
-  "phone": "+573101234567"
-}
-```
-```bash
-curl -X POST http://localhost:3000/users \
-  -H "Content-Type: application/json" \
-  -d '{"id":"1234567890","name":"Usuario de prueba","email":"prueba@seed.local","age":25,"phone":"+573101234567"}'
-# → 201 Created { "id":"1234567890", ... , "isActive": true }
-```
-
-**2) Listar usuarios `GET /users`**
-```bash
-curl http://localhost:3000/users
-# → 200 [ { "id":"1234567890", "name":"...", "email":"...", ... } ]
-```
-
-**3) Consultar usuario `GET /users/:id`**
-```bash
-curl http://localhost:3000/users/1234567890
-# → 200 { "id":"1234567890", ... }
-# → 404 si no existe o está desactivado
-```
-
-**4) Actualizar usuario `PUT /users/:id`** (todos los campos opcionales)
-```json
-{
-  "name": "Usuario de prueba actualizado",
-  "age": 26
-}
-```
-```bash
-curl -X PUT http://localhost:3000/users/1234567890 \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Usuario de prueba actualizado","age":26}'
-# → 200 { "id":"1234567890", "name":"Usuario de prueba actualizado", "age":26, ... }
-```
-
-**5) Desactivar usuario `DELETE /users/:id`** (soft delete)
-```bash
-curl -X DELETE http://localhost:3000/users/1234567890
-# → 200 (sin body)
-# Luego GET /users ya no lo lista y GET /users/1234567890 → 404
-```
-
-Validaciones: `id` 5-20 dígitos único, `email` único (se guarda lowercase/trim), `name` 2-100, `age` 0-130, `phone` `+?` 7-15 dígitos. Errores → `400` validación, `409` duplicado, `404` no encontrado.
-
-## 6. Probar Products (nuevo en Rama 2, CRUD standalone)
-
-Colección: `postman/backend-nestjs-seed.postman_collection.json` → carpeta **Products** (5 requests). Flujo:
-1. **Crear producto** `POST /products` → guarda el `id` uuid retornado en variable `productId`
-2. **Listar** `GET /products`
-3. **Consultar** `GET /products/{{productId}}`
-4. **Actualizar** `PUT /products/{{productId}}`
-5. **Eliminar (soft)** `DELETE /products/{{productId}}`
+## 4. Probar Users y Products (resumen)
+Ya vistos en ramas 1-2. Recuerda crear al menos 1 usuario y 1 producto antes de crear órdenes, porque la orden los referencia.
 
 ```bash
-# Crear
-curl -X POST http://localhost:3000/products -H "Content-Type: application/json" \
-  -d '{"name":"Proteína Whey","description":"900g vainilla","price":129.9,"stock":50}'
-
-# Listar
-curl http://localhost:3000/products
-
-# Consultar
-curl http://localhost:3000/products/<uuid>
-
-# Actualizar
-curl -X PUT http://localhost:3000/products/<uuid> -H "Content-Type: application/json" \
-  -d '{"price":119.9,"stock":45}'
-
-# Eliminar
-curl -X DELETE http://localhost:3000/products/<uuid>
+curl -X POST http://localhost:3000/users -H "Content-Type: application/json" -d '{"id":"1234567890","name":"Ana","email":"ana@seed.local","age":25,"phone":"+573001234567"}'
+curl -X POST http://localhost:3000/products -H "Content-Type: application/json" -d '{"name":"Proteína Whey","price":129.9,"stock":50}'
+# guarda el uuid del producto → lo usarás como {{productId}}
 ```
 
-Validaciones product: `name` 2-120, `description` ≤500, `price` 0.01-999999, `stock` 0-100000.
+Colección Postman: `postman/backend-nestjs-seed.postman_collection.json` carpetas Users y Products (5 req c/u).
 
-## 7. Estructura que debes ver
+## 5. Probar Orders — Tienda (nuevo didáctico)
 
+### Diagrama de relaciones que vas a ver en código
+```
+User 1 —— N Order 1 —— N OrderItem N —— 1 Product
+```
+- `src/orders/entities/order.entity.ts` — `Order` tiene `@ManyToOne(User)` con `@JoinColumn(userId)` y `@OneToMany(OrderItem, cascade:true)`
+- `src/orders/entities/order-item.entity.ts` — `OrderItem` tiene `@ManyToOne(Order, onDelete:CASCADE)` y `@ManyToOne(Product, eager:true)` + `quantity`, `unitPrice`
+- Por qué no `ManyToMany` directo: necesitamos guardar `quantity` y `unitPrice` histórico por item.
+
+### Endpoints Orders
+| Método | Ruta | Qué hace |
+|---|---|---|
+| `POST` | `/orders` | Crea orden: valida user activo, valida cada producto activo y `stock >= quantity`, calcula `total`, descuenta stock, crea `Order` + `OrderItem`s en **transacción** |
+| `GET` | `/orders` | Lista con `user` e `items.product` (eager) |
+| `GET` | `/orders/:id` | Detalle |
+| `GET` | `/orders/user/:userId` | Órdenes de un usuario |
+| `PUT` | `/orders/:id` | Cambia status (`PENDING`→`PAID`/`CANCELLED`) |
+| `PUT` | `/orders/:id/cancel` | Cancela `PENDING` y **restaura stock** en transacción |
+| `DELETE` | `/orders/:id` | Borra (si PENDING primero cancela/restaura) |
+
+### Crear orden — ejemplo completo
+```bash
+# 1 producto
+curl -X POST http://localhost:3000/orders -H "Content-Type: application/json" \
+  -d '{"userId":"1234567890","items":[{"productId":"<uuid>","quantity":2}]}'
+# → 201 { "id":"<orderId>", "total":"259.80", "status":"PENDING", "items":[...] }
+
+# 2 productos (usa dos uuid distintos)
+curl -X POST http://localhost:3000/orders -H "Content-Type: application/json" \
+  -d '{"userId":"1234567890","items":[{"productId":"<uuid1>","quantity":1},{"productId":"<uuid2>","quantity":3}]}'
+```
+
+Qué pasa dentro (`src/orders/services/orders.service.ts:create`):
+1. `queryRunner.startTransaction()`
+2. `findOneBy(User)` → 404 si no existe/inactivo
+3. Loop items → `findOneBy(Product)` → 404, check `stock < quantity` → 400, `total += price*quantity`, `product.stock -= quantity` + `save(product)`
+4. `create(Order)` con `items` + `save(Order)` (cascade guarda OrderItems)
+5. `commitTransaction()` o `rollbackTransaction()` si falla
+
+### Consultas y flujo de prueba sugerido en Postman
+Importa `postman/backend-nestjs-seed.postman_collection.json` → carpeta **Orders** (8 requests):
+1. Crear orden → copia `id` retornado a variable `orderId`
+2. Listar órdenes `GET /orders` → debe aparecer con `total` y `items[].product`
+3. Consultar `GET /orders/{{orderId}}`
+4. Órdenes por usuario `GET /orders/user/{{userId}}`
+5. Verifica stock descontado `GET /products/{{productId}}` → `stock` bajó
+6. Cancelar `PUT /orders/{{orderId}}/cancel` → `status:CANCELLED` y `GET /products/{{productId}}` vuelve a subir stock
+7. Crear otra orden y cambiar a `PAID` `PUT /orders/{{orderId}}` `{"status":"PAID"}`
+8. Intentar cancelar una `PAID` → `400`
+9. Eliminar `DELETE /orders/{{orderId}}`
+
+### Errores didácticos que debes provocar
+- Crear orden con `userId` inexistente → `404`
+- Con `productId` uuid inexistente → `404`
+- Con `quantity` 0 o `stock` insuficiente → `400`
+- Cancelar una orden ya `CANCELLED` o `PAID` → `400`
+- Cambiar `status` desde `CANCELLED` → `400`
+
+### DTOs didácticos
+- `src/orders/dto/create-order.dto.ts` — `userId` con `Matches(/^\d{5,20}$/)`, `items` con `@IsArray() @ArrayMinSize(1) @ValidateNested({each:true}) @Type(()=>CreateOrderItemDto)`, cada item `productId` `@IsUUID()` y `quantity` `@IsInt() @Min(1) @Max(100)`
+- `src/orders/dto/update-order.dto.ts` — solo `status` `@IsEnum(OrderStatus)`
+
+## 6. Estructura final Rama 3
 ```
 src/
   main.ts
-  app.module.ts            # + ProductsModule
+  app.module.ts            # UsersModule + ProductsModule + OrdersModule
   config/env.validation.ts
-  users/
-    users.module.ts
-    controllers/users.controller.ts
-    services/users.service.ts
-    entities/user.entity.ts
-    dto/create-user.dto.ts
-    dto/update-user.dto.ts
-  products/                # ← Rama 2
-    products.module.ts
-    controllers/products.controller.ts
-    services/products.service.ts
-    entities/product.entity.ts
-    dto/create-product.dto.ts
-    dto/update-product.dto.ts
+  users/                   # Rama 1
+  products/                # Rama 2
+  orders/                  # Rama 3
+    orders.module.ts
+    controllers/orders.controller.ts
+    services/orders.service.ts
+    entities/order.entity.ts
+    entities/order-item.entity.ts
+    dto/create-order.dto.ts
+    dto/update-order.dto.ts
+postman/backend-nestjs-seed.postman_collection.json # Users+Products+Orders
 ```
 
-Si el paso 4 arrancó sin errores y el 5 devuelve `201`/`200`, la instalación fue exitosa.
+## 7. Comandos útiles
+```bash
+npm run build && npm run lint && npm run start:dev
+# DB es SQLite data/app.sqlite (ignorado por git). Para resetear: rm data/app.sqlite y reiniciar.
+```
+
+Si todo lo anterior devuelve `201`/`200` y ves `total` calculado y `stock` moviéndose, la rama 3 quedó correcta.
