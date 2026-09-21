@@ -1,4 +1,6 @@
-# Backend NestJS Seed
+# Backend NestJS Seed — Rama 1 Iniciación
+
+> **Rama actual:** `rama-1-iniciacion` — base limpia tal cual iniciación. Para la guía paso a paso ver [`GUIA_DESCARGA.md`](./GUIA_DESCARGA.md) y colección Postman en [`postman/`](./postman/backend-nestjs-seed.postman_collection.json).
 
 Seed base genérico NestJS + TypeORM + TypeScript, clonado de `nutrifit-backend`. Misma estructura y mismo módulo `users` como ejemplo.
 
@@ -28,6 +30,20 @@ data/
 ```
 
 Clonado 1:1 de `nutrifit-backend/src`.
+
+## Guía rápida (Rama 1)
+
+Ver guía completa en [`GUIA_DESCARGA.md`](./GUIA_DESCARGA.md).
+
+```bash
+git clone -b rama-1-iniciacion https://github.com/cdtello/backend-nestjs-seed.git
+cd backend-nestjs-seed
+npm install
+cp .env.example .env
+npm run start:dev
+# API en http://localhost:3000
+# Probar con Postman: importar postman/backend-nestjs-seed.postman_collection.json
+```
 
 ## Inicio local
 

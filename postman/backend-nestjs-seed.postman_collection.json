@@ -1,0 +1,94 @@
+{
+  "info": {
+    "_postman_id": "b1a2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "Backend NestJS Seed API",
+    "description": "Colección base para probar el seed. Rama 1 - Iniciación. Incluye módulo Users (mismo que NutriFit). Ejecuta 'Crear usuario' primero y usa la variable userId para las rutas con ID. BaseUrl por defecto http://localhost:3000",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "userId",
+      "value": "1234567890"
+    }
+  ],
+  "item": [
+    {
+      "name": "Users",
+      "description": "Módulo de usuarios - CRUD completo con soft delete. Requiere haber creado un usuario antes de consultar/actualizar/eliminar por ID.",
+      "item": [
+        {
+          "name": "Crear usuario",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"1234567890\",\n  \"name\": \"Usuario de prueba\",\n  \"email\": \"prueba@seed.local\",\n  \"age\": 25,\n  \"phone\": \"+573101234567\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/users"
+          }
+        },
+        {
+          "name": "Listar usuarios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/users"
+          }
+        },
+        {
+          "name": "Consultar usuario",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/users/{{userId}}"
+          }
+        },
+        {
+          "name": "Actualizar usuario",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Usuario de prueba actualizado\",\n  \"age\": 26\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/users/{{userId}}"
+          }
+        },
+        {
+          "name": "Desactivar usuario",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/users/{{userId}}"
+          }
+        }
+      ]
+    }
+  ]
+}
